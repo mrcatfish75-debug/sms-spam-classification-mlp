@@ -1,0 +1,5 @@
+# Tahap 2 — jalankan setelah requirements-hari1.txt terinstal
+scikit-learn>=1.6,<1.10
+joblib>=1.4
+# TensorFlow 2.21 menyediakan wheel resmi Python 3.13 Windows 64-bit (CPU).
+tensorflow==2.21.0

@@ -1,0 +1,51 @@
+# =========================================
+# PYTHON ENVIRONMENT
+# =========================================
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.pytest_cache/
+
+# =========================================
+# DATASET SMS
+# =========================================
+data/raw/*
+data/processed/*
+data/splits/*
+
+# =========================================
+# TRAINED MODEL ARTIFACTS
+# =========================================
+models/*
+
+# =========================================
+# PRIVATE EXPERIMENT RECORDS
+# =========================================
+outputs/reports/*
+
+# =========================================
+# LOCAL CONFIGURATION
+# =========================================
+.env
+.env.*
+!.env.example
+.vscode/
+
+# =========================================
+# TEMPORARY FILES
+# =========================================
+*.log
+*.zip
+
+# =========================================
+# PRESERVE EMPTY FOLDER PLACEHOLDERS
+# =========================================
+!**/.gitkeep
+
+# Arsip eksperimen awal bahasa Indonesia
+README_HARI1.md
+README_OPSI_A.md
+scripts/01_audit_dataset.py
+outputs/figures/distribusi_label.png
+outputs/figures/panjang_pesan.png
