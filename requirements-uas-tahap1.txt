@@ -1,0 +1,3 @@
+# Gensim 4.4.0 has an official Windows CPython 3.13 x64 wheel.
+# Keep the existing UTS packages (pandas, numpy, TensorFlow, sklearn) intact.
+gensim==4.4.0
