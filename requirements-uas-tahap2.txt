@@ -1,0 +1,5 @@
+# Gabungan dependensi baseline UTS dan Word2Vec UAS.
+# Tidak perlu membuat ulang virtual environment.
+-r requirements-hari1.txt
+-r requirements-tahap2.txt
+-r requirements-uas-tahap1.txt
