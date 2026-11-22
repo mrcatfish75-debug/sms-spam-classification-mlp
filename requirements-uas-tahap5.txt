@@ -1,0 +1,5 @@
+# Tahap 5 menggunakan library UTS dan UAS Tahap 1; tidak ada model/paket baru.
+# Dipakai oleh Windows PowerShell pada Python 3.13 (venv yang sudah aktif).
+-r requirements-hari1.txt
+-r requirements-tahap2.txt
+-r requirements-uas-tahap1.txt
