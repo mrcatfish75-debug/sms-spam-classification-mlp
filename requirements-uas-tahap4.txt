@@ -1,0 +1,2 @@
+# All dependencies are inherited from the validated Stage 3 environment.
+-r requirements-uas-tahap3.txt
