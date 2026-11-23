@@ -1,0 +1,6 @@
+# Install from the existing SMS-Spam-Indonesia repository root.
+# Reuses the established TensorFlow 2.21 + scikit-learn requirements.
+-r requirements-tahap2.txt
+
+# Gradio 6 moved theme/css from Blocks() to launch(); app.py uses this API.
+gradio>=6.0,<7.0

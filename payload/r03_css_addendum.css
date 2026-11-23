@@ -1,0 +1,27 @@
+/* R03 — presentation-only addendum: preserve the R02 dark navy and responsive breakpoints. */
+.r03-pending {
+  background: #1f2d3e;
+  color: #eff6ff;
+  border: 1px solid #526780;
+  border-radius: 14px;
+  padding: 22px 24px;
+  max-width: 100%;
+}
+.r03-pending-eyebrow { color: #c0d5eb; font-size: 0.85rem; margin-bottom: 0.65rem; }
+.r03-pending h3 { color: #f1f6fd; font-weight: 650; font-size: 1.3rem; margin: 0 0 0.65rem; }
+.r03-pending p { color: #d4e4f4; font-size: 0.94rem; line-height: 1.55; margin: 0; }
+/* Secondary guard against excessively long token strings breaking columns. */
+.gradio-container .attention-token,
+.gradio-container .attention-row code,
+.gradio-container .attention-row .token,
+.gradio-container .r03-token {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: min(26ch, 100%);
+  vertical-align: middle;
+}
+.gradio-container .attention-row,
+.gradio-container .attention-bars,
+.gradio-container .analysis-card { min-width: 0; }

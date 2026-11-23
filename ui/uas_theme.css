@@ -1,0 +1,611 @@
+/* SMS Spam UAS · Human-Centered ML Workbench R02
+   UI interpretation of unslop by Damir Sokolovsky (@heydamir), CC BY 4.0.
+   Only display styles: no model, preprocessing, or evaluation logic. */
+
+:root {
+  --sms-background: #0b1018;
+  --sms-panel: #151e2a;
+  --sms-raised: #202c3c;
+  --sms-border: #354255;
+  --sms-text: #f1f4f8;
+  --sms-secondary: #b8c4d3;
+  --sms-muted: #96a6b9;
+  --sms-accent: #3272dc;
+  --sms-accent-soft: #a9caff;
+  --sms-ham: #82dfb1;
+  --sms-spam: #ff9a9a;
+}
+
+html, body {
+  background: var(--sms-background) !important;
+}
+
+.gradio-container {
+  /* Use the same palette for Gradio controls in both light and dark OS modes. */
+  --body-background-fill: #0b1018;
+  --background-fill-primary: #151e2a;
+  --background-fill-secondary: #202c3c;
+  --block-background-fill: #151e2a;
+  --block-border-color: #354255;
+  --block-label-text-color: #f1f4f8;
+  --block-title-text-color: #f1f4f8;
+  --body-text-color: #f1f4f8;
+  --input-background-fill: #202c3c;
+  --input-border-color: #354255;
+  --border-color-primary: #354255;
+  box-sizing: border-box;
+  max-width: 1228px !important;
+  width: 100% !important;
+  margin-inline: auto !important;
+  padding: 24px 24px 48px !important;
+  background: var(--sms-background) !important;
+  color: var(--sms-text) !important;
+  font-family: "IBM Plex Sans", "Segoe UI", Arial, sans-serif !important;
+  font-size: 15px !important;
+}
+
+.gradio-container * {
+  box-sizing: border-box;
+}
+
+.sms-hero {
+  padding: 12px 4px 28px;
+  color: var(--sms-text);
+}
+
+.sms-overline {
+  color: var(--sms-secondary);
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.sms-overline span {
+  color: var(--sms-muted);
+  margin-inline: 8px;
+}
+
+.sms-hero h1 {
+  color: var(--sms-text) !important;
+  margin: 0 0 12px;
+  font-size: clamp(28px, 3vw, 34px);
+  font-weight: 500;
+  line-height: 1.17;
+  letter-spacing: 0;
+}
+
+.sms-hero p {
+  color: var(--sms-secondary) !important;
+  font-size: 15px;
+  line-height: 1.62;
+  max-width: 78ch;
+  margin: 0;
+}
+
+#sms-workbench {
+  gap: 24px !important;
+  align-items: flex-start !important;
+}
+
+#sms-input-panel,
+#sms-result-panel {
+  min-width: 0;
+  background: var(--sms-panel) !important;
+  border: 1px solid var(--sms-border) !important;
+  border-radius: 16px !important;
+  padding: 24px !important;
+  gap: 16px !important;
+  color: var(--sms-text) !important;
+}
+
+.panel-head {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  color: var(--sms-text);
+  margin-bottom: 4px;
+}
+
+.panel-step {
+  display: flex;
+  flex: none;
+  justify-content: center;
+  align-items: center;
+  height: 32px;
+  width: 32px;
+  border-radius: 8px;
+  background: var(--sms-raised);
+  border: 1px solid var(--sms-border);
+  color: var(--sms-secondary);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.panel-head h2 {
+  color: var(--sms-text) !important;
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.panel-head p {
+  color: var(--sms-secondary) !important;
+  font-size: 13px;
+  line-height: 20px;
+  margin: 2px 0 0;
+}
+
+/* Gradio form controls: explicit dark surfaces even when the OS is in light mode. */
+#sms-input-panel label,
+#sms-input-panel .label-wrap,
+#sms-input-panel .label-wrap span,
+#sms-input-panel .label-wrap label,
+#sms-result-panel label {
+  color: var(--sms-text) !important;
+  font-weight: 500;
+}
+
+#sms-message,
+#sms-model-select {
+  background: transparent !important;
+  border: 0 !important;
+}
+
+#sms-message textarea,
+#sms-message textarea:focus {
+  width: 100% !important;
+  color: var(--sms-text) !important;
+  background: var(--sms-raised) !important;
+  border: 1px solid var(--sms-border) !important;
+  border-radius: 10px !important;
+  font-size: 15px !important;
+  line-height: 1.55 !important;
+  padding: 12px 14px !important;
+}
+
+#sms-message textarea::placeholder {
+  color: var(--sms-secondary) !important;
+  opacity: 1;
+}
+
+#sms-message textarea:focus-visible,
+#sms-input-panel button:focus-visible,
+#sms-input-panel input:focus-visible,
+#sms-input-panel [role="radio"]:focus-visible,
+#sms-input-panel summary:focus-visible,
+#sms-result-panel summary:focus-visible {
+  outline: 3px solid var(--sms-accent-soft) !important;
+  outline-offset: 3px !important;
+}
+
+.field-heading {
+  margin: 0 0 -4px;
+  color: var(--sms-text);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+#sms-examples {
+  gap: 8px !important;
+}
+
+#sms-examples button {
+  min-height: 40px;
+  background: var(--sms-raised) !important;
+  color: var(--sms-text) !important;
+  border: 1px solid var(--sms-border) !important;
+  border-radius: 8px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  transition: background-color 160ms ease, border-color 160ms ease;
+}
+
+#sms-examples button:hover {
+  background: #2b394b !important;
+  border-color: #6983a4 !important;
+}
+
+#sms-model-select {
+  color: var(--sms-text) !important;
+}
+
+#sms-model-select fieldset,
+#sms-model-select .wrap,
+#sms-model-select .container {
+  background: transparent !important;
+  border-color: var(--sms-border) !important;
+}
+
+#sms-model-select label {
+  color: var(--sms-text) !important;
+  font-size: 14px !important;
+  line-height: 20px;
+}
+
+#sms-model-select input[type="radio"] {
+  accent-color: var(--sms-accent);
+}
+
+#sms-attention-option,
+#sms-technical-panel {
+  background: var(--sms-raised) !important;
+  border: 1px solid var(--sms-border) !important;
+  border-radius: 10px !important;
+  color: var(--sms-text) !important;
+  overflow: hidden;
+}
+
+#sms-attention-option summary,
+#sms-technical-panel summary {
+  background: transparent !important;
+  color: var(--sms-text) !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  line-height: 20px !important;
+  min-height: 44px;
+}
+
+#sms-attention-option label,
+#sms-attention-option span {
+  color: var(--sms-text) !important;
+}
+
+#sms-attention-option input[type="checkbox"] {
+  accent-color: var(--sms-accent);
+}
+
+#sms-primary-action {
+  width: 100% !important;
+  min-height: 48px !important;
+  color: #fff !important;
+  background: var(--sms-accent) !important;
+  border: 1px solid #4c8af2 !important;
+  border-radius: 10px !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  transition: background-color 160ms ease, border-color 160ms ease;
+}
+
+#sms-primary-action:hover {
+  background: #285db8 !important;
+  border-color: #85abeb !important;
+}
+
+/* Result hierarchy: status -> score -> threshold -> supporting details. */
+.result-banner {
+  background: var(--sms-raised);
+  border: 1px solid var(--sms-border);
+  border-radius: 12px;
+  padding: 20px;
+  color: var(--sms-text);
+}
+
+.result-eyebrow {
+  display: block;
+  color: var(--sms-secondary);
+  font-size: 13px;
+  line-height: 20px;
+  margin-bottom: 8px;
+}
+
+.result-banner h2 {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  color: var(--sms-text) !important;
+  font-size: clamp(21px, 2.2vw, 26px);
+  font-weight: 500;
+  line-height: 1.25;
+  margin: 0 0 8px;
+}
+
+.result-banner p {
+  color: var(--sms-secondary) !important;
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.result-model {
+  display: block;
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--sms-secondary);
+}
+
+.status-dot {
+  display: inline-block;
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--sms-muted);
+}
+
+.result-banner.is-ham .status-dot,
+.score-card.is-ham .status-dot {
+  background: var(--sms-ham);
+}
+
+.result-banner.is-spam .status-dot,
+.score-card.is-spam .status-dot {
+  background: var(--sms-spam);
+}
+
+.result-banner.is-disagree {
+  border-color: #ab8655;
+}
+
+.result-banner.result-invalid {
+  border-color: #b96c72;
+}
+
+.score-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.score-grid.two-scores {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.score-card {
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--sms-border);
+  border-radius: 12px;
+  background: var(--sms-raised);
+  color: var(--sms-text) !important;
+}
+
+.score-card .score-model {
+  color: var(--sms-secondary) !important;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+.score-state {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  color: var(--sms-text) !important;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 22px;
+}
+
+.score-main {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.score-caption {
+  display: block;
+  max-width: 200px;
+  color: var(--sms-secondary) !important;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.score-value {
+  color: var(--sms-accent-soft) !important;
+  font-size: clamp(28px, 2.8vw, 34px);
+  font-weight: 500;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.score-track {
+  position: relative;
+  height: 12px;
+  width: 100%;
+  background: #435167;
+  border-radius: 6px;
+  margin-top: 16px;
+  overflow: visible;
+}
+
+.score-fill {
+  height: 100%;
+  background: var(--sms-accent);
+  border-radius: 6px;
+}
+
+.score-threshold {
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  width: 2px;
+  height: 22px;
+  background: #fff;
+  border-radius: 2px;
+}
+
+.score-scale {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--sms-secondary) !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.safety-inline {
+  border-left: 3px solid #8ea5c7;
+  margin: 2px 0 0;
+  padding: 4px 0 4px 12px;
+  color: var(--sms-secondary) !important;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.technical-copy,
+.attention-list {
+  color: var(--sms-text) !important;
+  padding: 4px 0 12px;
+}
+
+.technical-copy h3,
+.attention-list h3 {
+  color: var(--sms-text) !important;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  margin: 12px 0 8px;
+}
+
+.technical-copy p,
+.technical-note,
+.attention-disclaimer {
+  color: var(--sms-secondary) !important;
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 4px 0 12px;
+}
+
+.technical-copy strong {
+  color: var(--sms-text) !important;
+  font-weight: 500;
+}
+
+.attention-list {
+  border-top: 1px solid var(--sms-border);
+  padding-top: 12px;
+}
+
+.attention-row {
+  display: grid;
+  grid-template-columns: 26px minmax(64px, 1fr) minmax(72px, 1.6fr) 46px;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 4px 0;
+}
+
+.attention-rank {
+  color: var(--sms-muted) !important;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.attention-token {
+  color: var(--sms-text) !important;
+  font-family: "IBM Plex Mono", Consolas, monospace;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+  background: none;
+  padding: 0;
+}
+
+.attention-bar {
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background: #455469;
+  overflow: hidden;
+}
+
+.attention-fill {
+  height: 100%;
+  background: #80adef;
+  border-radius: 4px;
+}
+
+.attention-weight {
+  text-align: right;
+  color: var(--sms-text) !important;
+  font-size: 12px;
+  font-family: "IBM Plex Mono", Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.attention-disclaimer {
+  margin: 12px 0 0;
+}
+
+.sms-footer {
+  padding: 24px 4px 0;
+  margin-top: 24px;
+  border-top: 1px solid var(--sms-border);
+  color: var(--sms-secondary);
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.sms-footer strong {
+  display: block;
+  color: var(--sms-text) !important;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.sms-footer p {
+  margin: 0;
+  max-width: 92ch;
+  color: var(--sms-secondary) !important;
+}
+
+@media (max-width: 900px) {
+  .gradio-container { padding: 16px 16px 32px !important; }
+  #sms-workbench { gap: 16px !important; }
+  #sms-input-panel, #sms-result-panel { padding: 20px !important; }
+  .sms-hero { padding-bottom: 20px; }
+  .score-grid.two-scores { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 590px) {
+  .gradio-container { padding: 12px 12px 28px !important; }
+  #sms-input-panel, #sms-result-panel { padding: 16px !important; }
+  .sms-hero h1 { font-size: 28px; }
+  .sms-hero p { font-size: 14px; }
+  .score-main { margin-top: 16px; }
+  .score-value { font-size: 30px; }
+  #sms-examples { flex-wrap: wrap !important; }
+  .attention-row { grid-template-columns: 22px minmax(52px, 1fr) minmax(52px, 1fr) 42px; gap: 6px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #sms-primary-action, #sms-examples button { transition: none !important; }
+}
+
+/* R03 — presentation-only addendum: preserve the R02 dark navy and responsive breakpoints. */
+.r03-pending {
+  background: #1f2d3e;
+  color: #eff6ff;
+  border: 1px solid #526780;
+  border-radius: 14px;
+  padding: 22px 24px;
+  max-width: 100%;
+}
+.r03-pending-eyebrow { color: #c0d5eb; font-size: 0.85rem; margin-bottom: 0.65rem; }
+.r03-pending h3 { color: #f1f6fd; font-weight: 650; font-size: 1.3rem; margin: 0 0 0.65rem; }
+.r03-pending p { color: #d4e4f4; font-size: 0.94rem; line-height: 1.55; margin: 0; }
+/* Secondary guard against excessively long token strings breaking columns. */
+.gradio-container .attention-token,
+.gradio-container .attention-row code,
+.gradio-container .attention-row .token,
+.gradio-container .r03-token {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: min(26ch, 100%);
+  vertical-align: middle;
+}
+.gradio-container .attention-row,
+.gradio-container .attention-bars,
+.gradio-container .analysis-card { min-width: 0; }
